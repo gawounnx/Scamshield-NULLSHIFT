@@ -54,7 +54,7 @@ Phone (Next.js, mobile web)
 ```bash
 cd app
 npm install
-echo "GEMINI_API_KEY=your_key" > .env.local   # optional: without a key the API returns mock verdicts
+echo "GEMINI_API_KEY=your_key" > .env.local   # optional: without a key, `npm run dev` returns mock verdicts; `npm start` (production) also needs ANALYZE_ALLOW_MOCK=1, otherwise the API answers INTERNAL
 npm run dev                                    # http://localhost:3000
 npm test                                       # unit + API tests (Gemini is faked)
 npm run build && python3 ../.claude/skills/webapp-testing/scripts/with_server.py --server "ANALYZE_ALLOW_MOCK=1 npx next start -p 3100" --port 3100 -- python3 ../tests/e2e/demo_flow.py http://localhost:3100   # e2e demo flow (#6); needs: pip install playwright && playwright install chromium
