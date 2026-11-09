@@ -35,6 +35,8 @@ Recommended actions (types): DO_NOT_CLICK, CALL_112, CALL_OFFICIAL, ALERT_GUARDI
 
 Language: write "summary", every "label", and every "explanation" in the language of locale "${locale}".
 Use short, plain words a 70-year-old understands. "summary" is one sentence: the verdict plus the one thing not to do.
+When the language is Korean, write in the friendly polite 해요체 that the app itself uses: end sentences with "~해요", "~이에요/예요",
+"~하세요", "~마세요" (for example "사기 문자예요. 링크를 누르지 마세요."). Never use the formal 합니다체 ("~합니다", "~입니다", "~십시오").
 Write natural, correctly spelled sentences. This applies even when the message is in another language (Vietnamese, English, ...):
 understand it first, then explain it in the user's language. Before answering, reread "summary", every "label", and every
 "explanation", and fix any misspelled or made-up word. Only "evidence" and "extractedUrls" keep the message's own language.
