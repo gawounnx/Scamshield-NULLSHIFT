@@ -80,17 +80,19 @@
 >
 > 점심은 빌드 중 제공된다. (제안) 식사는 에이전트가 돌아가는 동안 교대로 한다.
 
-| 시간 | 단계 | 해야 할 일 | 필요한 스킬 (§3-1 참고) | 완료 기준 |
+> **스킬 열은 실제 사용 기준으로 갱신했다 (11/9 12:35).** ✅ 사용함 · ⏳ 남은 단계에서 사용 예정. `/implement`, `/to-tickets`는 모델이 직접 호출할 수 없게 설정된 스킬이라, 에이전트가 SKILL.md를 읽고 그 절차대로 수행했다. 원칙: 이미 받은 스킬을 먼저 쓰고, 받은 스킬에 없는 기능만 gstack으로 한다.
+
+| 시간 | 단계 | 해야 할 일 | 스킬 (실제 사용) | 완료 기준 |
 |---|---|---|---|---|
-| T+0:00 ~ 0:15 | **Spec lock** | 저장소 생성, `/grill-with-docs` → `/to-spec`으로 SPEC.md 확정 (전날 브레인스토밍 결과 투입) | `grill-with-docs`, `to-spec` | SPEC.md의 Must 2~3개(권장 2개), 데모 시나리오 1개 |
-| T+0:15 ~ 0:30 | **Plan & Setup** | 스킬 복사·설치, 작업 분해, 담당 영역 배정, `AGENTS.md`/`CLAUDE.md` 작성 | `to-tickets`, `writing-for-agents` | 작업 목록이 slice 단위(각 20~40분)로 나뉨 |
-| T+0:30 ~ 1:00 | **Walking skeleton** | 전체 흐름이 끝까지 이어지는 최소 버전 (mock 허용), 첫 배포/실행 확인 | `implement`, `frontend-design`(UI), `deploy-to-vercel`(웹 배포 시) | 데모 시나리오가 mock으로라도 1회 통과 |
+| T+0:00 ~ 0:15 | **Spec lock** | 저장소 생성, `/grill-with-docs` → `/to-spec`으로 SPEC.md 확정 (전날 브레인스토밍 결과 투입) | ✅ `grilling`, `domain-modeling` → SPEC.md(`/to-spec` 형식) | SPEC.md의 Must 2~3개(권장 2개), 데모 시나리오 1개 |
+| T+0:15 ~ 0:30 | **Plan & Setup** | 스킬 복사·설치, 작업 분해, 담당 영역 배정, `AGENTS.md`/`CLAUDE.md` 작성 | ✅ `to-tickets` 절차(이슈 #1–#8, `docs/tickets/`), `writing-for-agents`(AGENTS.md) | 작업 목록이 slice 단위(각 20~40분)로 나뉨 |
+| T+0:30 ~ 1:00 | **Walking skeleton** | 전체 흐름이 끝까지 이어지는 최소 버전 (mock 허용), 첫 배포/실행 확인 | ✅ `implement` 절차 + `code-review`(API), `frontend-design`(화면), `/gstack-careful` · ⏳ `deploy-to-vercel` | 데모 시나리오가 mock으로라도 1회 통과 |
 | T+1:00 ~ 1:10 | **Backup 영상** | skeleton 상태로 30~60초 데모 영상을 녹화해 Loom/YouTube에 업로드 (영어 한두 문장 나레이션, 화질·완성도 무관) | — | 백업 영상 링크 확보, 링크 열림 확인 |
-| T+1:10 ~ 3:00 | **Build** | Must 기능을 vertical slice로 하나씩 완성. 완성할 때마다 커밋과 데모 흐름 확인 | `implement`, `frontend-design` | Must 전부 실제 동작 |
+| T+1:10 ~ 3:00 | **Build** | Must 기능을 vertical slice로 하나씩 완성. 완성할 때마다 커밋과 데모 흐름 확인 | ⏳ `implement`, `frontend-design` | Must 전부 실제 동작 |
 | **T+3:00** | **Feature freeze** | 새 기능 추가 금지 | — | — |
-| T+3:00 ~ 3:30 | **Polish & Fix** | 버그 수정, 오류 처리, UI 정리, 영어 README. (Codex로 리뷰·테스트·버그 수정) | `diagnosing-bugs`, `webapp-testing` | 데모 시나리오가 3회 연속 통과 |
+| T+3:00 ~ 3:30 | **Polish & Fix** | 버그 수정, 오류 처리, UI 정리, 영어 README. (코드 리뷰는 `code-review`, 테스트·버그 수정은 Codex) | ⏳ `code-review`(코드 리뷰), `diagnosing-bugs`, `webapp-testing`(QA) | 데모 시나리오가 3회 연속 통과 |
 | T+3:30 ~ 4:15 | **Demo 영상** | 90초 스크립트 작성(영어), 리허설, 녹화(Loom/YouTube), 업로드 | 전용 스킬 없음 (`deploy-to-vercel`로 라이브 링크 확보 가능) | 영상 링크 열림 확인 |
-| T+4:15 ~ 4:40 | **제출** | GitHub URL, 영상 링크 제출, 시크릿 노출 점검, 시크릿 창에서 링크 열기. 최종 영상이 문제면 백업 영상으로 대체 | `verification-before-completion` | 제출 완료 확인 |
+| T+4:15 ~ 4:40 | **제출** | GitHub URL, 영상 링크 제출, 시크릿 노출 점검, 시크릿 창에서 링크 열기. 최종 영상이 문제면 백업 영상으로 대체 | ⏳ `verification-before-completion` | 제출 완료 확인 |
 | T+4:40 ~ 5:00 | **Buffer** | 예비 시간 (절대 사용하지 않는 것을 목표로) | — | — |
 
 ### 3-1. 스킬 (5시간용 최소 세트, 10개 이내)
@@ -110,6 +112,14 @@
 | `webapp-testing` | anthropics | Polish | Playwright로 로컬 웹앱 UI 동작 검증 |
 | `verification-before-completion` | superpowers | 제출 | "완료"라고 말하기 전에 실제 동작을 확인 |
 | `deploy-to-vercel` | vercel-labs | Skeleton, Demo | 웹앱을 Vercel에 배포해 라이브 링크 확보 (**웹 배포할 때만**) |
+
+**추가로 쓰는 gstack 스킬 (위 10개에 없는 기능만)**
+
+| 스킬 | 쓰는 단계 | 하는 일 |
+|---|---|---|
+| `/gstack-careful` | Skeleton~Build | 2명이 같은 저장소에서 작업할 때 파일 삭제·force-push 같은 위험 명령 경고 |
+
+코드 리뷰는 이미 받은 `code-review`, QA는 `webapp-testing`으로 하므로 `/gstack-review`, `/gstack-qa`는 쓰지 않는다. 앞으로도 받은 스킬에 없는 기능이 필요할 때만 gstack을 쓴다. gstack은 각자 `~/.claude/skills`에 `./setup --prefix`로 설치하며 저장소에는 넣지 않는다.
 
 **설치 (오늘 밤 `skills-staging/`에서 리허설, 10시 이후 프로젝트 폴더로 복사)**
 
