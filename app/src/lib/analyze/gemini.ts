@@ -6,8 +6,8 @@ import { buildSystemInstruction, buildUserPrompt, VERDICT_JSON_SCHEMA } from "./
 import type { ActionType, AnalyzeRequest, RedFlag, RecommendedAction, RiskLevel, ScamType, Verdict } from "./types";
 import { extractUrls, looksLikeUrl } from "./urls";
 
-export const PRIMARY_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
-export const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-2.5-flash";
+export const PRIMARY_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+export const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.1-flash-lite";
 
 const RETRYABLE_STATUS = new Set([429, 500, 503, 504]);
 const PRIMARY_ATTEMPTS = 2;
