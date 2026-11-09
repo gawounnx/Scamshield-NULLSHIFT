@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AnalyzeError, Verdict } from "@/lib/analyze/types";
+import { SAMPLE_MESSAGES } from "@/lib/samples";
 
 const analyzeWithGemini = vi.fn();
 vi.mock("@/lib/analyze/gemini", async (importOriginal) => ({
@@ -60,6 +61,21 @@ describe("POST /api/analyze — with GEMINI_API_KEY", () => {
     });
     expect(res.status).toBe(200);
     expect(((await res.json()) as Verdict).riskLevel).toBe("SAFE");
+  });
+
+  it("every sample button keeps a cached verdict when Gemini is busy", async () => {
+    analyzeWithGemini.mockRejectedValue(new BusyError());
+    for (const sample of SAMPLE_MESSAGES) {
+      const res = await post({ text: sample.text, locale: "ko-KR" });
+      expect(res.status, sample.id).toBe(200);
+    }
+  });
+
+  it("the parcel-smishing sample is cached as CRITICAL while busy", async () => {
+    analyzeWithGemini.mockRejectedValue(new BusyError());
+    const parcel = SAMPLE_MESSAGES.find((s) => s.id === "parcel-smishing")!;
+    const res = await post({ text: parcel.text, locale: "ko-KR" });
+    expect(((await res.json()) as Verdict).riskLevel).toBe("CRITICAL");
   });
 
   it("ANALYZE_MOCK_ON_BUSY=1 answers any request with a mock while recording", async () => {
