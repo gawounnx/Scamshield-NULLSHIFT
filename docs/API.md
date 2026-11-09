@@ -14,10 +14,10 @@
 type ImageMimeType = "image/png" | "image/jpeg" | "image/webp";
 
 interface AnalyzeRequest {
-  text?: string;                 // 붙여넣은 메시지, 최대 5,000자
+  text?: string;                 // 붙여넣은 메시지. 앞뒤 공백을 뺀 뒤 최대 5,000자(이모지도 1자). 공백뿐이면 없는 것으로 봐요
   image?: {
     mimeType: ImageMimeType;
-    data: string;                // base64, "data:" 접두어 없이
+    data: string;                // base64, "data:" 접두어 없이, 최대 4,000,000자(원본 약 3MB)
   };
   locale: string;                // BCP 47, navigator.language 그대로 (예: "ko-KR", "en-US", "vi-VN")
 }
@@ -95,7 +95,7 @@ Gemini 출력과 상관없이 서버가 강제하므로, 프론트는 이 규칙
 ```ts
 type AnalyzeErrorCode =
   | "INVALID_INPUT"      // 400: text·image 둘 다 없음, locale 없음, 형식 오류
-  | "PAYLOAD_TOO_LARGE"  // 413: 이미지나 텍스트가 한도를 넘음
+  | "PAYLOAD_TOO_LARGE"  // 413: 이미지나 텍스트가 한도를 넘음, 또는 요청 본문이 4.5MB를 넘음
   | "BUSY"               // 503: Gemini 503·쿼터 초과로 재시도까지 실패
   | "INTERNAL";          // 500: 그 밖의 서버 오류
 
