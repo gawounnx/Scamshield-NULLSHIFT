@@ -20,6 +20,35 @@ const post = (body: unknown) =>
     }),
   );
 
+describe("POST /api/analyze — without GEMINI_API_KEY", () => {
+  beforeEach(() => {
+    vi.stubEnv("GEMINI_API_KEY", "");
+    vi.stubEnv("ANALYZE_ALLOW_MOCK", "");
+  });
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("serves mock verdicts outside production (local UI work)", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const res = await post({ text: "처음 보는 문자", locale: "ko-KR" });
+    expect(res.status).toBe(200);
+  });
+
+  it("refuses to serve mocks in production instead of answering SAFE to scams", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const res = await post({ text: "OO세무서입니다. 신분증, 계좌번호를 보내주세요.", locale: "ko-KR" });
+    expect(res.status).toBe(500);
+    const json: AnalyzeError = await res.json();
+    expect(json.error.code).toBe("INTERNAL");
+  });
+
+  it("ANALYZE_ALLOW_MOCK=1 opts in to mocks in production", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("ANALYZE_ALLOW_MOCK", "1");
+    const res = await post({ text: "처음 보는 문자", locale: "ko-KR" });
+    expect(res.status).toBe(200);
+  });
+});
+
 describe("POST /api/analyze — with GEMINI_API_KEY", () => {
   beforeEach(() => {
     vi.stubEnv("GEMINI_API_KEY", "test-key");

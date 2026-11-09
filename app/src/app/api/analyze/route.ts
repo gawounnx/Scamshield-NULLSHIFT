@@ -45,7 +45,13 @@ export async function POST(request: Request): Promise<Response> {
     const req = result.request;
     let raw: Verdict;
     if (!process.env.GEMINI_API_KEY) {
-      // No key (local UI work, tests): mock verdicts from docs/API.md.
+      // No key is fine for local UI work and tests (mock verdicts from docs/API.md), but a
+      // production deploy must not fall back to mocks silently: they answer SAFE to scams
+      // without a link. Fail loudly; ANALYZE_ALLOW_MOCK=1 opts in on purpose.
+      if (process.env.NODE_ENV === "production" && process.env.ANALYZE_ALLOW_MOCK !== "1") {
+        console.error("[analyze] GEMINI_API_KEY is not set; refusing to serve mock verdicts in production.");
+        return errorResponse("INTERNAL", "The verdict service is not configured.");
+      }
       raw = pickMockVerdict(req);
     } else {
       try {
