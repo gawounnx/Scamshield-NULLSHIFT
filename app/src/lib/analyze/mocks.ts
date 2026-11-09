@@ -111,3 +111,16 @@ export function pickMockVerdict(request: AnalyzeRequest): Verdict {
   if (request.image) return PARCEL_SMISHING;
   return NORMAL_PARCEL;
 }
+
+// Demo sample texts from docs/API.md. When Gemini is busy, these still get their cached
+// verdict (docs/API.md "BUSY"). The screenshot sample can't be matched by text; set
+// ANALYZE_MOCK_ON_BUSY=1 while recording the demo to cover it.
+const DEMO_SAMPLE_TEXTS = new Set([
+  "엄마 나 폰 액정 깨져서 수리 맡겼어. 이 번호로 문자만 돼. 급하게 결제할 게 있는데 엄마 카드 앞뒤 사진이랑 비밀번호 좀 보내줘. 아빠한테는 말하지 말고",
+  "ALERT: Your bank account has been temporarily locked due to unusual activity. Verify your identity within 24 hours to avoid permanent suspension: http://secure-acct-verify.top/login",
+  "[CJ대한통운] 고객님의 상품이 오늘(11/9) 14~16시 사이 배송될 예정입니다. 담당 기사: 김OO",
+]);
+
+export function isDemoSample(request: AnalyzeRequest): boolean {
+  return !request.image && DEMO_SAMPLE_TEXTS.has((request.text ?? "").trim());
+}
