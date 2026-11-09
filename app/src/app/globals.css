@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ScamShield tokens. Light only: high contrast for older users. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: #15212b;
+  --color-ink-soft: #4a5862;
+  --color-paper: #f3f6f5;
+  --color-surface: #ffffff;
+  --color-line: #d3dbd8;
+  --color-bubble: #e6eaec;
+
+  /* Risk level inks (seal colors) */
+  --color-safe: #1d7347;
+  --color-caution: #996000;
+  --color-danger: #c8431b;
+  --color-critical: #b0121b;
+
+  --font-sans: var(--font-plex), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: var(--font-hansans), var(--font-plex), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+/* The verdict seal: one stamp-down moment when a verdict arrives. */
+.seal {
+  /* Ink grain so the seal reads as stamped, not drawn. */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.6 1.45'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-size: 200px 200px;
+  transform: rotate(-6deg);
+  animation: seal-down 420ms cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+@keyframes seal-down {
+  from {
+    opacity: 0;
+    transform: scale(1.7) rotate(-16deg);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-6deg);
+  }
+}
+
+.seal-wait {
+  animation: seal-breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes seal-breathe {
+  50% {
+    transform: rotate(-6deg) scale(0.94);
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal,
+  .seal-wait {
+    animation: none;
+  }
 }
