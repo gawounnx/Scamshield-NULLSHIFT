@@ -18,6 +18,11 @@ export const SAMPLE_MESSAGES: SampleMessage[] = [
     text: "엄마 나 폰 액정 깨져서 수리 맡겼어. 이 번호로 문자만 돼. 급하게 결제할 게 있는데 엄마 카드 앞뒤 사진이랑 비밀번호 좀 보내줘. 아빠한테는 말하지 말고",
   },
   {
+    id: "english-account-lock",
+    title: "영어로 온 계좌 잠금 문자",
+    text: "ALERT: Your bank account has been temporarily locked due to unusual activity. Verify your identity within 24 hours to avoid permanent suspension: http://secure-acct-verify.top/login",
+  },
+  {
     id: "normal-parcel",
     title: "배송 예정 안내 문자",
     text: "[CJ대한통운] 고객님의 상품이 오늘(11/9) 14~16시 사이 배송될 예정입니다. 담당 기사: 김OO",
