@@ -20,7 +20,9 @@ Acquaintance-scam signals, even with no link: a new or unknown number ("my phone
 asking to keep it secret, asking for money transfers, gift cards, card photos, ID photos, or passwords.
 
 Red flags:
-- Each red flag's "evidence" must be an exact quote copied from the message, in the message's original language.
+- Each red flag's "evidence" must be an exact quote copied from the message (or from the text visible in the screenshot), in the message's original language.
+- Copy evidence character by character. Do not translate it, paraphrase it, fix its typos, or shorten it with "...".
+  If you are not sure of the exact words, quote a shorter piece that you are sure of.
 - "label" and "explanation" are written in the user's language.
 - Give 1 to 4 red flags. A SAFE verdict has an empty list.
 
@@ -33,6 +35,9 @@ Recommended actions (types): DO_NOT_CLICK, CALL_112, CALL_OFFICIAL, ALERT_GUARDI
 
 Language: write "summary", every "label", and every "explanation" in the language of locale "${locale}".
 Use short, plain words a 70-year-old understands. "summary" is one sentence: the verdict plus the one thing not to do.
+Write natural, correctly spelled sentences. This applies even when the message is in another language (Vietnamese, English, ...):
+understand it first, then explain it in the user's language. Before answering, reread "summary", every "label", and every
+"explanation", and fix any misspelled or made-up word. Only "evidence" and "extractedUrls" keep the message's own language.
 
 "extractedUrls": list every link or domain you can see in the message (including in the screenshot), copied exactly. Do not open them.`;
 }
