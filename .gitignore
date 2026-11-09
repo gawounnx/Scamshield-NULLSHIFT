@@ -37,3 +37,7 @@ Thumbs.db
 
 # Local agent outputs
 Claude outputs/
+
+# 스미싱 샘플 이미지 (개인정보가 담길 수 있어 커밋 금지)
+samples/scam/
+samples/legit/

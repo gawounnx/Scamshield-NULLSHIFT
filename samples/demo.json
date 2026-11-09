@@ -1,0 +1,59 @@
+{
+  "_about": "90초 데모(SPEC 시나리오 3~6)에 쓸 문자 4개. 실제로 수신된 문자가 아니라 공개된 사기 문구의 패턴(basedOn)을 따라 만든 데모용 구성이에요. 영상이나 README에서 '실제 사기 문자'라고 말하지 마세요. 링크는 실제 접속이 되지 않는 예약 도메인(.example)을 썼어요. 이 도메인은 의심 TLD가 아니라서 S1(URL 검사)을 만들면 .top 같은 의심 TLD 규칙은 별도 샘플로 시험해야 해요. 베트남어 문구는 직접 썼으니 원어민 확인이 필요해요.",
+  "samples": [
+    {
+      "id": "demo-1-parcel-smishing",
+      "scenario": "시나리오 3 (0:18-0:40) 택배 스미싱",
+      "lang": "ko",
+      "text": "[Web발신]\n[CJ대한통운] 고객님의 택배가 주소 불일치로 배송 실패되었습니다. 오늘 안에 주소를 다시 입력하지 않으면 반송 처리됩니다.\nhttp://cj-logis-kr.example/a8Xk2",
+      "basedOn": ["web-institution-01", "web-institution-03"],
+      "fidelity": "demo-constructed",
+      "expected": { "riskLevel": ["CRITICAL", "DANGER"], "scamType": "INSTITUTION", "mustInclude": ["ALERT_GUARDIAN"] },
+      "demoPoint": "의심 신호: 위조 도메인(공식 도메인 아님), 긴급성(오늘 안에), 주소 재입력 요구"
+    },
+    {
+      "id": "demo-2-acquaintance-no-link",
+      "scenario": "시나리오 4 (0:40-0:54) 링크 없는 지인 사칭",
+      "lang": "ko",
+      "text": "엄마 나 폰 액정 깨져서 친구 폰으로 문자해. 지금 급하게 결제할 게 있는데 내 폰으론 인증이 안 돼서 그래. 엄마 카드 앞뒤 사진이랑 비밀번호 좀 보내줄 수 있어? 엄마한테 전화는 못 해, 친구 폰이라 곤란해.",
+      "basedOn": ["web-acquaintance-01", "web-acquaintance-03"],
+      "fidelity": "demo-constructed",
+      "expected": { "riskLevel": ["DANGER", "CRITICAL"], "scamType": "ACQUAINTANCE", "mustInclude": ["ALERT_GUARDIAN", "VERIFY_WITH_PERSON"] },
+      "demoPoint": "링크가 없어도 판정: 새 번호, 전화 회피, 카드 정보·비밀번호 요구 (SPEC Risks의 지인 사칭 신호)"
+    },
+    {
+      "id": "demo-3a-english-account-lock",
+      "scenario": "시나리오 5 (0:54-1:06) 영어 사기 문자",
+      "lang": "en",
+      "text": "[Bank Alert] Unusual sign-in detected. Your account has been temporarily locked. Verify your identity within 24 hours to avoid permanent suspension: http://secure-bank-verify.example/login",
+      "basedOn": ["공개 사례의 계정 잠금·24시간 기한 패턴 (예: Vietcombank·Techcombank 경고, USPS가 밝힌 'account suspended' 유형)"],
+      "fidelity": "demo-constructed",
+      "expected": { "riskLevel": ["DANGER", "CRITICAL"], "scamType": "FINANCIAL" },
+      "demoPoint": "기기 언어가 한국어면 한국어로 판정이 나와야 함 ('Any language')"
+    },
+    {
+      "id": "demo-3b-vietnamese-account-lock",
+      "scenario": "시나리오 5 (0:54-1:06) 베트남어 사기 문자 (3a 대신 또는 함께)",
+      "lang": "vi",
+      "text": "Tai khoan ngan hang cua ban bi khoa do dang nhap bat thuong. Vui long xac minh trong 24 gio de tranh bi khoa vinh vien: http://vcb-digibank-xacthuc.example",
+      "basedOn": ["공개 사례의 계정 잠금·24시간 기한 패턴 (Vietcombank·Techcombank 경고 기사)"],
+      "fidelity": "demo-constructed",
+      "expected": { "riskLevel": ["DANGER", "CRITICAL"], "scamType": "FINANCIAL" },
+      "demoPoint": "성조 표기를 뺀 문자 형태라 실제 스미싱에서도 흔하지만, 원어민 확인 필요"
+    },
+    {
+      "id": "demo-4-legit-parcel",
+      "scenario": "시나리오 6 (1:06-1:14) 정상 택배 알림",
+      "lang": "ko",
+      "text": "[Web발신]\n[CJ대한통운] 고객님의 택배가 오늘 오후 배송 예정입니다. 문 앞에 두고 갈 예정이며 별도 조치는 필요 없습니다.",
+      "basedOn": ["legit-01"],
+      "fidelity": "demo-constructed",
+      "expected": { "riskLevel": ["SAFE"], "scamType": null },
+      "demoPoint": "링크도 요구 사항도 없는 정상 문자는 겁주지 않고 SAFE (User Story 10)"
+    }
+  ],
+  "homeSamples": {
+    "_note": "앱 홈 화면의 체험 샘플 3개 (User Story 26). 데모 1, 2, 4를 그대로 쓰면 스모크 테스트와 캐시 폴백(SPEC Risks)이 같은 샘플로 묶여요.",
+    "ids": ["demo-1-parcel-smishing", "demo-2-acquaintance-no-link", "demo-4-legit-parcel"]
+  }
+}
