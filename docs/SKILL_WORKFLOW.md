@@ -7,8 +7,11 @@
 
 | gstack 스킬 | 사용 | 이유 |
 |---|---|---|
-| `/gstack-careful` | ✅ 사용 중 | 위험 명령 경고. 받은 스킬에 없음 |
-| `/gstack-review` | ❌ | `code-review`로 대체 |
+| `/gstack-careful` | ✅ 가원 세션 | 위험 명령 경고. 받은 스킬에 없음. 세션·노트북마다 따로 켜야 함 |
+| `/gstack-freeze` | ✅ 가원 세션 | 편집 범위를 `app/src`로 제한 |
+| `/gstack-canary` | ⏳ 배포 직후 | 배포 사이트 오류 확인. 결과 화면 캡처 → 특별상 근거 |
+| `/gstack-cso` | 선택 | 보안 점검, 시간 남으면 |
+| `/gstack-review` | ❌ | Claude Code 기본 내장 `code-review`로 대체 |
 | `/gstack-qa` | ❌ | `webapp-testing`으로 대체 |
 | `/gstack-office-hours`, `/gstack-spec` | ❌ | `grilling`, `domain-modeling`, `to-spec`으로 대체 |
 | `/gstack-plan-ceo-review`, `/gstack-plan-eng-review` | ❌ | SPEC.md 확정 후 범위 고정, 시간 부족 |

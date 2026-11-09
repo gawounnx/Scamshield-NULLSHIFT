@@ -12,7 +12,7 @@
 - **Next.js 16 가이드 (`app/AGENTS.md`)**: `app/` 코드 작성 전 `app/node_modules/next/dist/docs/` 문서를 확인한다.
 
 ## Scope & Product Invariants
-- **Must 우선 · Won't 제외**: `SPEC.md`의 `Must(M1–M2)`를 먼저 동작시킨 뒤 남는 시간에 `Should(S1–S4)`를 위에서부터 진행한다. `Out of Scope(Won't)` 항목은 구현에서 제외한다. 개발 도구 GStack은 이미 받은 스킬에 없는 기능(현재 `/gstack-careful`)에만 선별적으로 쓴다.
+- **Must 우선 · Won't 제외**: `SPEC.md`의 `Must(M1–M2)`를 먼저 동작시킨 뒤 남는 시간에 `Should(S1–S4)`를 위에서부터 진행한다. `Out of Scope(Won't)` 항목은 구현에서 제외한다.
 - **Feature freeze (`13:00`)**: 마감 2시간 전 이후에는 버그 수정, 안정화, 영어 `README.md`, 데모 준비만 진행한다.
 - **원문 비보관**: 서버·DB(S4 익명 판정 기록 포함)·콘솔 출력에는 익명 메타데이터만 남기며, 의심 메시지 원문과 이미지는 저장·출력하지 않는다.
 - **정적 URL 검사**: URL 검사는 문자열 파싱과 Safe Browsing 조회로만 수행하며, 추출한 링크를 직접 열거나 페치하지 않는다.

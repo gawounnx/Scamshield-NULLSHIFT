@@ -144,7 +144,6 @@ interface Verdict {
 - 대신 링크 열기, 대신 답장하기
 - 공공 돌봄 연계
 - GBrain 활용, Transposed Prize(현장 고객 유치)
-- (참고) GStack은 제품 기능이 아니라 개발 도구로, 이미 받은 스킬에 없는 기능(현재 위험 명령 경고 `/gstack-careful`)에만 선별적으로 써요.
 
 ## Risks / Fallback
 

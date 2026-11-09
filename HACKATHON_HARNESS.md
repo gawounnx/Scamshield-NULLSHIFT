@@ -84,7 +84,7 @@
 
 | 시간 | 단계 | 해야 할 일 | 스킬 (실제 사용) | 완료 기준 |
 |---|---|---|---|---|
-| T+0:00 ~ 0:15 | **Spec lock** | 저장소 생성, `/grill-with-docs` → `/to-spec`으로 SPEC.md 확정 (전날 브레인스토밍 결과 투입) | ✅ `grilling`, `domain-modeling` → SPEC.md(`/to-spec` 형식) | SPEC.md의 Must 2~3개(권장 2개), 데모 시나리오 1개 |
+| T+0:00 ~ 0:15 | **Spec lock** | 저장소 생성, `/grill-with-docs` → `/to-spec`으로 SPEC.md 확정 (전날 브레인스토밍 결과 투입) | ✅ `grilling`, `domain-modeling`(10개 목록 밖, 계정 스킬) → SPEC.md(`/to-spec` 형식, 스킬 호출은 안 함) | SPEC.md의 Must 2~3개(권장 2개), 데모 시나리오 1개 |
 | T+0:15 ~ 0:30 | **Plan & Setup** | 스킬 복사·설치, 작업 분해, 담당 영역 배정, `AGENTS.md`/`CLAUDE.md` 작성 | ✅ `to-tickets` 절차(이슈 #1–#8, `docs/tickets/`), `writing-for-agents`(AGENTS.md) | 작업 목록이 slice 단위(각 20~40분)로 나뉨 |
 | T+0:30 ~ 1:00 | **Walking skeleton** | 전체 흐름이 끝까지 이어지는 최소 버전 (mock 허용), 첫 배포/실행 확인 | ✅ `implement` 절차 + `code-review`(API), `frontend-design`(화면), `/gstack-careful` · ⏳ `deploy-to-vercel` | 데모 시나리오가 mock으로라도 1회 통과 |
 | T+1:00 ~ 1:10 | **Backup 영상** | skeleton 상태로 30~60초 데모 영상을 녹화해 Loom/YouTube에 업로드 (영어 한두 문장 나레이션, 화질·완성도 무관) | — | 백업 영상 링크 확보, 링크 열림 확인 |
@@ -97,7 +97,7 @@
 
 ### 3-1. 스킬 (5시간용 최소 세트, 10개 이내)
 
-> 5시간 동안은 스킬을 늘릴수록 에이전트가 헷갈리고 설치 시간만 든다. **아래 10개로 충분하다.** 그 밖의 스킬은 설치하지 않는다.
+> 5시간 동안은 스킬을 늘릴수록 에이전트가 헷갈리고 설치 시간만 든다. **아래 10개와 Claude Code 기본 내장 `code-review`로 충분하다.** 그 밖의 스킬은 설치하지 않되, 이 목록에 없는 기능이 꼭 필요할 때만 gstack으로 보완한다(아래 "추가로 쓰는 gstack 스킬").
 > `claude-api`는 Claude API를 쓰지 않으므로 제외했다. Gemini 연동용으로 검증한 전용 스킬은 없으므로 공식 문서/SDK를 에이전트에게 참고시킨다.
 
 | 스킬 | 팩 | 쓰는 단계 | 하는 일 |
@@ -117,9 +117,12 @@
 
 | 스킬 | 쓰는 단계 | 하는 일 |
 |---|---|---|
-| `/gstack-careful` | Skeleton~Build | 2명이 같은 저장소에서 작업할 때 파일 삭제·force-push 같은 위험 명령 경고 |
+| `/gstack-careful` | Skeleton~Build | 위험 명령(파일 삭제·force-push) 경고. ✅ 가원 노트북 세션에서 켬 (세션·노트북마다 따로 켜야 함) |
+| `/gstack-freeze` | Build | 편집 범위를 `app/src`로 제한. ✅ 가원 세션에서 켬 |
+| `/gstack-canary` | 배포 직후 | 배포된 사이트의 콘솔 오류·깨진 페이지 확인. ⏳ |
+| `/gstack-cso` | Polish (선택) | 보안 점검(API 키 노출, 프롬프트 인젝션, 업로드). ⏳ 시간 남으면 |
 
-코드 리뷰는 이미 받은 `code-review`, QA는 `webapp-testing`으로 하므로 `/gstack-review`, `/gstack-qa`는 쓰지 않는다. 앞으로도 받은 스킬에 없는 기능이 필요할 때만 gstack을 쓴다. gstack은 각자 `~/.claude/skills`에 `./setup --prefix`로 설치하며 저장소에는 넣지 않는다.
+코드 리뷰는 Claude Code 기본 내장 `code-review`, QA는 `webapp-testing`으로 하므로 `/gstack-review`, `/gstack-qa`는 쓰지 않는다. 앞으로도 받은 스킬에 없는 기능이 필요할 때만 gstack을 쓴다. gstack은 각자 `~/.claude/skills`에 `./setup --prefix`로 설치하며 저장소에는 넣지 않는다.
 
 **설치 (오늘 밤 `skills-staging/`에서 리허설, 10시 이후 프로젝트 폴더로 복사)**
 
@@ -161,7 +164,7 @@ npx skills@latest add vercel-labs/agent-skills --skill deploy-to-vercel   # 웹 
 | 에이전트 | 추천 용도 |
 |---|---|
 | Claude Code | 구현(핵심 로직·UI), 작업 분해, 리팩터링 |
-| Codex | 리뷰, 테스트, 버그 수정, 배포 설정 등 Claude Code가 커밋한 slice를 검증·보완하는 작업 |
+| Codex | 테스트, 버그 수정, 배포 설정 등 Claude Code가 커밋한 slice를 검증·보완하는 작업 (코드 리뷰는 Claude Code의 `code-review`가 맡는다) |
 | (선택) Antigravity | 쓰기로 했다면 UI slice·브라우저 검증 전담. 안 쓰면 생략 |
 
 공통 규칙:
