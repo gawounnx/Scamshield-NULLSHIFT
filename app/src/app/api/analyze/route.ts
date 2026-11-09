@@ -57,13 +57,17 @@ export async function POST(request: Request): Promise<Response> {
       try {
         raw = await analyzeWithGemini(req);
       } catch (error) {
-        if (!(error instanceof BusyError)) throw error;
-        // Demo safety net (SPEC Risks): demo samples keep their cached verdict; set
-        // ANALYZE_MOCK_ON_BUSY=1 to answer every request with mocks while recording.
-        if (!isDemoSample(req) && process.env.ANALYZE_MOCK_ON_BUSY !== "1") {
+        // Demo safety net (SPEC Risks): whenever Gemini fails (busy, quota, or a model/permission
+        // error), demo samples keep their cached verdict; set ANALYZE_MOCK_ON_BUSY=1 to answer
+        // every request with mocks while recording.
+        if (isDemoSample(req) || process.env.ANALYZE_MOCK_ON_BUSY === "1") {
+          console.warn("[analyze] gemini failed; serving the cached verdict:", error instanceof Error ? error.name : "unknown");
+          raw = pickMockVerdict(req);
+        } else if (error instanceof BusyError) {
           return errorResponse("BUSY", "Too many requests right now. Please try again shortly.", error.retryAfterSec);
+        } else {
+          throw error;
         }
-        raw = pickMockVerdict(req);
       }
     }
 

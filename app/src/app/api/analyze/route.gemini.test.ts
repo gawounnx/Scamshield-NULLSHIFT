@@ -114,6 +114,14 @@ describe("POST /api/analyze — with GEMINI_API_KEY", () => {
     expect(res.status).toBe(200);
   });
 
+  it("keeps the cached verdict for a demo sample even when Gemini fails with a non-busy error", async () => {
+    analyzeWithGemini.mockRejectedValue(Object.assign(new Error("not found"), { status: 404 }));
+    const parcel = SAMPLE_MESSAGES.find((s) => s.id === "parcel-smishing")!;
+    const res = await post({ text: parcel.text, locale: "ko-KR" });
+    expect(res.status).toBe(200);
+    expect(((await res.json()) as Verdict).riskLevel).toBe("CRITICAL");
+  });
+
   it("an unexpected Gemini error (e.g. bad key) becomes 500 INTERNAL", async () => {
     analyzeWithGemini.mockRejectedValue(Object.assign(new Error("forbidden"), { status: 403 }));
     const res = await post({ text: "hi", locale: "ko-KR" });

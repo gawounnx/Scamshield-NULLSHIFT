@@ -74,9 +74,16 @@ export async function analyzeWithGemini(
     } catch (error) {
       const status = (error as { status?: unknown })?.status;
       console.warn(`[analyze] gemini attempt ${i + 1} (${attempts[i]}) failed:`, status ?? (error as Error)?.name);
-      // A malformed answer (SyntaxError) is worth one more try; a 400-class error is not.
-      if (!(error instanceof SyntaxError) && !isRetryable(error)) throw error;
-      if (i < attempts.length - 1) await sleep(backoffMs * 2 ** i);
+      const isLast = i === attempts.length - 1;
+      // A malformed answer (SyntaxError) and overload/quota errors are worth another try.
+      if (error instanceof SyntaxError || isRetryable(error)) {
+        if (!isLast) await sleep(backoffMs * 2 ** i);
+        continue;
+      }
+      // A 400-class error (404 retired model id, 403 permission, bad request) won't change by
+      // retrying the same model, but the fallback model may still work: jump straight to it.
+      if (isLast) throw error;
+      i = attempts.length - 2;
     }
   }
   throw new BusyError();

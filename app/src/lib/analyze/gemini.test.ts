@@ -51,10 +51,17 @@ describe("analyzeWithGemini", () => {
     expect(generate).toHaveBeenCalledTimes(3);
   });
 
-  it("does not retry a 400-class error (bad key, bad request)", async () => {
+  it("does not retry the same model on a 400-class error, but still tries the fallback once", async () => {
     const generate = vi.fn<GenerateFn>().mockRejectedValue(apiError(403));
     await expect(analyzeWithGemini({ text: "hi", locale: "ko-KR" }, generate, 0)).rejects.toThrow("status 403");
-    expect(generate).toHaveBeenCalledTimes(1);
+    expect(generate.mock.calls.map((c) => c[0].model)).toEqual([PRIMARY_MODEL, FALLBACK_MODEL]);
+  });
+
+  it("falls back to the other model when the primary id is gone (404)", async () => {
+    const generate = vi.fn<GenerateFn>().mockRejectedValueOnce(apiError(404)).mockResolvedValueOnce(JSON.stringify(GOOD));
+    const v = await analyzeWithGemini({ text: "hi", locale: "ko-KR" }, generate, 0);
+    expect(v.riskLevel).toBe("CRITICAL");
+    expect(generate.mock.calls.map((c) => c[0].model)).toEqual([PRIMARY_MODEL, FALLBACK_MODEL]);
   });
 
   it("retries once when the model returns malformed JSON", async () => {
