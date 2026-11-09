@@ -42,6 +42,7 @@ export default function VerdictView({ verdict, guardian, onDone }: Props) {
   const [notice, setNotice] = useState<string | null>(null);
   const critical = verdict.riskLevel === "CRITICAL";
   const tint = RISK_TEXT[verdict.riskLevel];
+  const showGuardianAlert = verdict.recommendedActions.some((a) => a.type === "ALERT_GUARDIAN");
 
   const toggle = (index: number) =>
     setDone((prev) => {
@@ -61,19 +62,7 @@ export default function VerdictView({ verdict, guardian, onDone }: Props) {
         </a>
       );
     }
-    if (action.type === "ALERT_GUARDIAN") {
-      if (!guardian) return null;
-      return (
-        <button
-          type="button"
-          className={critical ? buttonStyles.secondary : buttonStyles.primary}
-          onClick={async () => setNotice(await alertGuardian(verdict, guardian))}
-        >
-          <Icon name="share" />
-          {guardian.name}에게 알리기
-        </button>
-      );
-    }
+    if (action.type === "ALERT_GUARDIAN") return null; // shown near the top, under the 112 button
     if (action.type === "NONE") return <p className="py-2 font-medium">{action.label}</p>;
     const checked = done.has(index);
     return (
@@ -117,6 +106,25 @@ export default function VerdictView({ verdict, guardian, onDone }: Props) {
       )}
       {critical && <p className="mt-2 text-base text-ink-soft">신고와 지급정지를 한 번에 요청할 수 있어요.</p>}
 
+      {/* Demo scenario 3: the guardian alert sits right under 112 (or the summary), not at the end of the list. */}
+      {showGuardianAlert && guardian && (
+        <>
+          <button
+            type="button"
+            className={`${critical ? buttonStyles.secondary : buttonStyles.primary} mt-4`}
+            onClick={async () => setNotice(await alertGuardian(verdict, guardian))}
+          >
+            <Icon name="share" />
+            {guardian.name}에게 알리기
+          </button>
+          {notice && (
+            <p className="mt-2 text-base font-medium" role="status">
+              {notice}
+            </p>
+          )}
+        </>
+      )}
+
       {verdict.redFlags.length > 0 && (
         <section className="mt-10" aria-labelledby="red-flags">
           <h2 id="red-flags" className="font-display text-[24px]">
@@ -146,11 +154,6 @@ export default function VerdictView({ verdict, guardian, onDone }: Props) {
             return node && <li key={action.type + index}>{node}</li>;
           })}
         </ul>
-        {notice && (
-          <p className="mt-3 text-base font-medium" role="status">
-            {notice}
-          </p>
-        )}
       </section>
 
       <button type="button" onClick={onDone} className={`${buttonStyles.secondary} mt-12`}>
