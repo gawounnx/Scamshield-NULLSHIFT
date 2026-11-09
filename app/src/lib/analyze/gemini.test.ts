@@ -64,6 +64,22 @@ describe("analyzeWithGemini", () => {
     expect(generate.mock.calls.map((c) => c[0].model)).toEqual([PRIMARY_MODEL, FALLBACK_MODEL]);
   });
 
+  it.each([["an empty object", "{}"], ["an array", "[]"], ["null", "null"], ["a verdict with no summary", JSON.stringify({ ...GOOD, summary: "" })]])(
+    "treats %s as a failed attempt and retries instead of returning a hollow verdict",
+    async (_name, hollow) => {
+      const generate = vi.fn<GenerateFn>().mockResolvedValueOnce(hollow).mockResolvedValueOnce(JSON.stringify(GOOD));
+      const v = await analyzeWithGemini({ text: "hi", locale: "ko-KR" }, generate, 0);
+      expect(v.summary).toBe(GOOD.summary);
+      expect(generate).toHaveBeenCalledTimes(2);
+    },
+  );
+
+  it("reports BUSY, not an empty 200, when every attempt comes back hollow", async () => {
+    const generate = vi.fn<GenerateFn>().mockResolvedValue("{}");
+    await expect(analyzeWithGemini({ text: "hi", locale: "ko-KR" }, generate, 0)).rejects.toBeInstanceOf(BusyError);
+    expect(generate).toHaveBeenCalledTimes(3);
+  });
+
   it("retries once when the model returns malformed JSON", async () => {
     const generate = vi.fn<GenerateFn>().mockResolvedValueOnce("{not json").mockResolvedValueOnce(JSON.stringify(GOOD));
     const v = await analyzeWithGemini({ text: "hi", locale: "ko-KR" }, generate, 0);

@@ -22,6 +22,17 @@ export class BusyError extends Error {
   }
 }
 
+/**
+ * The model answered with valid JSON that is not a verdict (`{}`, `[]`, null, no summary), e.g.
+ * a safety-filtered or truncated reply. A SyntaxError so it is retried like malformed JSON.
+ */
+class MalformedVerdictError extends SyntaxError {
+  constructor() {
+    super("The model answer is not a usable verdict.");
+    this.name = "MalformedVerdictError";
+  }
+}
+
 /** The one Gemini call we make, injectable for tests. Returns the raw JSON text. */
 export type GenerateFn = (args: {
   model: string;
@@ -70,7 +81,9 @@ export async function analyzeWithGemini(
   for (let i = 0; i < attempts.length; i++) {
     try {
       const raw = await generate({ model: attempts[i], systemInstruction, parts });
-      return coerceVerdict(JSON.parse(raw), serverUrls);
+      const parsed: unknown = JSON.parse(raw);
+      if (!isUsableVerdict(parsed)) throw new MalformedVerdictError();
+      return coerceVerdict(parsed, serverUrls);
     } catch (error) {
       const status = (error as { status?: unknown })?.status;
       console.warn(`[analyze] gemini attempt ${i + 1} (${attempts[i]}) failed:`, status ?? (error as Error)?.name);
@@ -111,6 +124,13 @@ const ACTION_TYPES: readonly ActionType[] = [
 
 const str = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
 const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+
+/** A real answer has a known risk level and a one-line summary; anything less is a failed attempt. */
+function isUsableVerdict(raw: unknown): boolean {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return false;
+  const o = raw as Record<string, unknown>;
+  return RISK_LEVELS.includes(o.riskLevel as RiskLevel) && str(o.summary) !== "";
+}
 
 /** Turns whatever the model returned into a valid Verdict. Unknown values fall back to safe defaults. */
 export function coerceVerdict(raw: unknown, serverUrls: string[]): Verdict {
